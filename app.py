@@ -36,13 +36,16 @@ def save_mail(content, track_id):
 
 @app.route('/track/<track_id>')
 def track(track_id):
-    ip = request.headers.get('X-Forwarded-For', request.remote_addr)
+    visitor_ip = request.headers.get('X-Forwarded-For', request.remote_addr)
     timestamp = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-    log = f"[{timestamp}] ID: {track_id} | IP: {ip}\n"
+    log_entry = f"[{timestamp}] ID: {track_id} | IP: {visitor_ip}\n"
+
     with open(LOG_FILE, "a") as f:
-        f.write(log)
-    print(log.strip())
-    return render_template_string("""
+        f.write(log_entry)
+
+    print(log_entry.strip())
+
+    return f"""
     <html>
     <body style="background:#111;color:#eee;font-family:sans-serif;text-align:center;padding:50px;">
         <h1 style="color:#0f0;">Participation enregistrée !</h1>
