@@ -1,12 +1,15 @@
-from flask import Flask, request, send_from_directory, render_template_string
+from flask import Flask, request, send_from_directory, render_template_string, redirect, url_for, session
 import os, datetime
 
 app = Flask(__name__)
+app.secret_key = "trhacknon_secret_key"  # Pour sessions
+
+USERNAME = "trhacknon"
+PASSWORD = "trh@ckn0n"
 LOG_FILE = "clicks.log"
 MAIL_DIR = "mails"
-TRACK_BASE_URL = "https://trackmail-8wik.onrender.com/track"
+TRACK_BASE_URL = "https://trackmail-8wik.onrender.com/track"  # À adapter
 
-# Création du dossier mails si absent
 os.makedirs(MAIL_DIR, exist_ok=True)
 
 def create_mail(track_id):
@@ -17,7 +20,7 @@ def create_mail(track_id):
         <h1 style="color:#0f0;">Bonjour !</h1>
         <p>Cliquez sur le lien ci-dessous :</p>
         <a href="{track_url}" style="color:#0ff;">{track_url}</a>
-        <hr><small>trhacknon tracking mail - {datetime.datetime.now().strftime('%Y-%m-%d')}</small>
+        <hr><small>trhacknon tracker - {datetime.datetime.now().strftime('%Y-%m-%d')}</small>
     </body>
     </html>
     """
@@ -38,40 +41,69 @@ def track(track_id):
         f.write(log)
     print(log.strip())
     return render_template_string("""
-        <body style="background:#000;color:#0f0;font-family:monospace;padding:40px;text-align:center;">
-            <h1>Merci !</h1><p>Votre clic a bien été enregistré.</p>
-        </body>
+    <body style="background:#000;color:#0f0;font-family:monospace;padding:40px;text-align:center;">
+        <h1>Merci !</h1><p>Votre clic a bien été enregistré.</p>
+    </body>
+    """)
+
+@app.route('/', methods=['GET', 'POST'])
+def login():
+    if request.method == 'POST':
+        if request.form.get("username") == USERNAME and request.form.get("password") == PASSWORD:
+            session['logged_in'] = True
+            return redirect(url_for('dashboard'))
+    return render_template_string("""
+    <body style="background:#000;color:#0f0;font-family:monospace;text-align:center;padding-top:100px;">
+        <h1>trhacknon - Mail Tracker</h1>
+        <form method="post">
+            <input name="username" placeholder="Username" style="padding:10px;"><br><br>
+            <input type="password" name="password" placeholder="Password" style="padding:10px;"><br><br>
+            <button type="submit" style="padding:10px 20px;background:#0f0;color:#000;">Login</button>
+        </form>
+    </body>
+    """)
+
+@app.route('/dashboard')
+def dashboard():
+    if not session.get('logged_in'):
+        return redirect(url_for('login'))
+
+    files = [f for f in os.listdir(MAIL_DIR) if f.endswith(".html")]
+    mail_links = [f'<li><a style="color:#0ff;" href="/mails/view/{f}">{f}</a></li>' for f in files]
+
+    if os.path.exists(LOG_FILE):
+        with open(LOG_FILE, "r") as f:
+            logs = f.read().splitlines()
+    else:
+        logs = []
+
+    return render_template_string(f"""
+    <body style="background:#111;color:#fff;font-family:sans-serif;padding:30px;">
+        <h2 style="color:#0f0;">Dashboard - trhacknon</h2>
+        <a href="/generate" style="color:#ff0;">[+] Générer un nouveau mail</a><br><br>
+
+        <h3 style="color:#0ff;">Mails générés</h3>
+        <ul>{''.join(mail_links)}</ul>
+
+        <h3 style="color:#f66;">Clics détectés</h3>
+        <pre style="background:#000;padding:10px;color:#0f0;">{chr(10).join(logs)}</pre>
+    </body>
     """)
 
 @app.route('/generate')
 def generate():
+    if not session.get('logged_in'):
+        return redirect(url_for('login'))
+
     track_id = datetime.datetime.now().strftime("%Y%m%d%H%M%S")
     html, link = create_mail(track_id)
     file = save_mail(html, track_id)
-    return f"""
-    <body style="background:#000;color:#fff;padding:30px;font-family:sans-serif;">
-        <h2 style="color:#0ff;">Mail généré</h2>
-        <p><b>Track ID:</b> {track_id}</p>
-        <p><b>Lien de tracking:</b> <a style='color:#0f0;' href="{link}">{link}</a></p>
-        <p><b>Fichier HTML:</b> <a style='color:#0ff;' href="/mails/view/{os.path.basename(file)}">{os.path.basename(file)}</a></p>
-        <a href="/mails" style="color:#ff0;">Voir tous les mails</a>
-    </body>
-    """
-
-@app.route('/mails')
-def list_mails():
-    files = [f for f in os.listdir(MAIL_DIR) if f.endswith(".html")]
-    links = [f'<li><a style="color:#0ff;" href="/mails/view/{f}">{f}</a></li>' for f in files]
-    return f"""
-    <body style="background:#111;color:#fff;padding:30px;">
-        <h2 style="color:#0f0;">Emails générés :</h2>
-        <ul>{''.join(links)}</ul>
-        <a href="/generate" style="color:#ff0;">Générer un nouveau mail</a>
-    </body>
-    """
+    return redirect(url_for('dashboard'))
 
 @app.route('/mails/view/<filename>')
 def view_mail(filename):
+    if not session.get('logged_in'):
+        return redirect(url_for('login'))
     return send_from_directory(MAIL_DIR, filename)
 
 if __name__ == '__main__':
