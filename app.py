@@ -14,6 +14,8 @@ os.makedirs(MAIL_DIR, exist_ok=True)
 
 def create_mail(track_id):
     track_url = f"{TRACK_BASE_URL}/{track_id}"
+    
+    # Construction du contenu du mail
     html_content = f"""
     <html>
     <body style="background:#111;color:#eee;font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;padding:30px;line-height:1.6;">
@@ -54,6 +56,8 @@ def create_mail(track_id):
     </body>
     </html>
     """
+    
+    # Retourner le contenu et l'URL de suivi
     return html_content, track_url
 
 def save_mail(content, track_id):
