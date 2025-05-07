@@ -56,7 +56,7 @@ def track(track_id):
         <small style="color:#666;">Votre IP : {visitor_ip} | {timestamp}</small>
     </body>
     </html>
-""")
+"""
 
 @app.route('/', methods=['GET', 'POST'])
 def login():
