@@ -4,7 +4,7 @@ import os, datetime
 app = Flask(__name__)
 LOG_FILE = "clicks.log"
 MAIL_DIR = "mails"
-TRACK_BASE_URL = "https://yourdomain.onrender.com/track"
+TRACK_BASE_URL = "https://trackmail-8wik.onrender.com/track"
 
 # Création du dossier mails si absent
 os.makedirs(MAIL_DIR, exist_ok=True)
