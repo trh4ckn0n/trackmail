@@ -14,8 +14,6 @@ os.makedirs(MAIL_DIR, exist_ok=True)
 
 def create_mail(track_id):
     track_url = f"{TRACK_BASE_URL}/{track_id}"
-    
-    # Construction du contenu du mail
     html_content = f"""
     <html>
     <body style="background:#111;color:#eee;font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;padding:30px;line-height:1.6;">
@@ -37,27 +35,9 @@ def create_mail(track_id):
             <hr style="border:1px solid #333;">
             <small style="color:#666;">Organisé par Anongame | {datetime.datetime.now().strftime('%Y-%m-%d')}</small>
         </div>
-        
-        <div style="max-width:600px;margin:auto;margin-top:40px;text-align:center;">
-            <h2 style="color:#0f0;">Copiez le code source HTML du mail</h2>
-            <textarea id="html_code" style="width:100%;height:200px;background:#222;color:#0f0;border:1px solid #0f0;padding:10px;border-radius:5px;font-family:monospace;font-size:14px;">{html_content}</textarea><br><br>
-            <button onclick="copyToClipboard()" style="background:#0f0;color:#000;padding:10px 20px;border:none;border-radius:5px;font-size:16px;">Copier le code</button>
-        </div>
-        
-        <script>
-        function copyToClipboard() {{
-            var copyText = document.getElementById("html_code");
-            copyText.select();
-            copyText.setSelectionRange(0, 99999); // Pour mobile
-            document.execCommand("copy");
-            alert("Code HTML copié dans le presse-papier !");
-        }}
-        </script>
     </body>
     </html>
     """
-    
-    # Retourner le contenu HTML et l'URL de suivi
     return html_content, track_url
 
 def save_mail(content, track_id):
