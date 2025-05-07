@@ -43,10 +43,17 @@ def track(track_id):
         f.write(log)
     print(log.strip())
     return render_template_string("""
-    <body style="background:#000;color:#0f0;font-family:monospace;padding:40px;text-align:center;">
-        <h1>Merci !</h1><p>Votre participation au tirage au sort est bien prise en compte. Nous vous souhaitons bonne chance et reviendront vers vous en cas de gain.</p>
+    <html>
+    <body style="background:#111;color:#eee;font-family:sans-serif;text-align:center;padding:50px;">
+        <h1 style="color:#0f0;">Participation enregistrée !</h1>
+        <p>Merci d'avoir cliqué sur le lien.</p>
+        <p>Votre participation au tirage au sort <strong>Anongame</strong> a bien été prise en compte.</p>
+        <p>Bonne chance !</p>
+        <hr>
+        <small style="color:#666;">Votre IP : {visitor_ip} | {timestamp}</small>
     </body>
-    """)
+    </html>
+""")
 
 @app.route('/', methods=['GET', 'POST'])
 def login():
