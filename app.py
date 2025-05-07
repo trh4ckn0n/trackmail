@@ -17,10 +17,12 @@ def create_mail(track_id):
     html_content = f"""
     <html>
     <body style="background:#111;color:#eee;font-family:sans-serif;padding:20px;">
-        <h1 style="color:#0f0;">Bonjour !</h1>
-        <p>Cliquez sur le lien ci-dessous :</p>
-        <a href="{track_url}" style="color:#0ff;">{track_url}</a>
-        <hr><small>trhacknon tracker - {datetime.datetime.now().strftime('%Y-%m-%d')}</small>
+        <h1 style="color:#0f0;">Tirage au sort Anongame !</h1>
+        <p>Participez dès maintenant à notre grand tirage au sort et tentez de gagner <strong>de nombreux cadeaux exclusifs</strong> !</p>
+        <p>Cliquez sur le lien ci-dessous pour valider votre participation :</p>
+        <a href="{track_url}" style="color:#0ff;font-size:18px;">{track_url}</a>
+        <hr>
+        <small>Organisé par Anongame - {datetime.datetime.now().strftime('%Y-%m-%d')}</small>
     </body>
     </html>
     """
@@ -42,7 +44,7 @@ def track(track_id):
     print(log.strip())
     return render_template_string("""
     <body style="background:#000;color:#0f0;font-family:monospace;padding:40px;text-align:center;">
-        <h1>Merci !</h1><p>Votre clic a bien été enregistré.</p>
+        <h1>Merci !</h1><p>Votre participation au tirage au sort est bien prise en compte. Nous vous souhaitons bonne chance et reviendront vers vous en cas de gain.</p>
     </body>
     """)
 
