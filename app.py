@@ -16,13 +16,25 @@ def create_mail(track_id):
     track_url = f"{TRACK_BASE_URL}/{track_id}"
     html_content = f"""
     <html>
-    <body style="background:#111;color:#eee;font-family:sans-serif;padding:20px;">
-        <h1 style="color:#0f0;">Tirage au sort Anongame !</h1>
-        <p>Participez dès maintenant à notre grand tirage au sort et tentez de gagner <strong>de nombreux cadeaux exclusifs</strong> !</p>
-        <p>Cliquez sur le lien ci-dessous pour valider votre participation :</p>
-        <a href="{track_url}" style="color:#0ff;font-size:18px;">{track_url}</a>
-        <hr>
-        <small>Organisé par Anongame - {datetime.datetime.now().strftime('%Y-%m-%d')}</small>
+    <body style="background:#111;color:#eee;font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;padding:30px;line-height:1.6;">
+        <div style="max-width:600px;margin:auto;border:2px solid #0f0;padding:20px;border-radius:10px;background:#000;">
+            <h1 style="color:#0f0;text-align:center;">Gagnez gros avec Anongame !</h1>
+            <p style="font-size:16px;">Vous avez été sélectionné pour participer à notre <strong style="color:#ff0;">grand tirage au sort exclusif</strong> !</p>
+            <p style="font-size:16px;">De nombreux lots sont à gagner, dont :</p>
+            <ul style="color:#0ff;font-size:15px;">
+                <li>Cartes cadeaux Amazon, PlayStation, Steam...</li>
+                <li>Crypto-monnaie (BTC, ETH...)</li>
+                <li>Équipements gaming, accessoires tech</li>
+                <li>Et bien plus encore !</li>
+            </ul>
+            <p style="margin-top:30px;font-size:16px;">Pour participer, il vous suffit de cliquer sur le lien ci-dessous :</p>
+            <div style="text-align:center;margin:30px 0;">
+                <a href="{track_url}" style="background:#0f0;color:#000;padding:12px 25px;text-decoration:none;font-weight:bold;border-radius:5px;font-size:18px;">Je participe maintenant</a>
+            </div>
+            <p style="color:#aaa;font-size:14px;">Faites vite, les places sont limitées et le tirage aura lieu dans moins de 48h !</p>
+            <hr style="border:1px solid #333;">
+            <small style="color:#666;">Organisé par Anongame | {datetime.datetime.now().strftime('%Y-%m-%d')}</small>
+        </div>
     </body>
     </html>
     """
