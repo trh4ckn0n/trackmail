@@ -57,7 +57,7 @@ def create_mail(track_id):
     </html>
     """
     
-    # Retourner le contenu et l'URL de suivi
+    # Retourner le contenu HTML et l'URL de suivi
     return html_content, track_url
 
 def save_mail(content, track_id):
