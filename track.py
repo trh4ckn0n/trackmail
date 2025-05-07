@@ -5,9 +5,8 @@ app = Flask(__name__)
 app.secret_key = "trhacknon_secret_2025"
 LOG_FILE = "clicks.log"
 MAIL_DIR = "mails"
-PASSWORD = "trknmail"  # change ici ton mot de passe
+PASSWORD = "trknmail"  # modifiable
 
-# HTML STYLES
 STYLE = """
 <style>
   body {
@@ -48,6 +47,13 @@ STYLE = """
     border: none;
     padding: 5px 10px;
     cursor: pointer;
+  }
+  pre {
+    background: #111;
+    padding: 15px;
+    border: 1px solid #39ff14;
+    overflow-x: auto;
+    max-height: 400px;
   }
 </style>
 """
@@ -92,13 +98,24 @@ def list_mails():
     files = os.listdir(MAIL_DIR)
     files = [f for f in files if f.endswith(".html")]
     links = [f'<li><a href="/mails/view/{f}">{f}</a></li>' for f in files]
-    return f"{STYLE}<h2>Emails générés :</h2><ul>{''.join(links)}</ul>"
+    return f"{STYLE}<h2>Emails générés :</h2><ul>{''.join(links)}</ul><a href='/logs'>Voir les logs</a>"
 
 @app.route('/mails/view/<filename>')
 def view_mail(filename):
     if not session.get("logged_in"):
         return redirect(url_for("login"))
     return send_from_directory(MAIL_DIR, filename)
+
+@app.route('/logs')
+def show_logs():
+    if not session.get("logged_in"):
+        return redirect(url_for("login"))
+
+    logs = ""
+    if os.path.exists(LOG_FILE):
+        with open(LOG_FILE, "r") as f:
+            logs = f.read()
+    return f"{STYLE}<h2>Historique des clics :</h2><pre>{logs}</pre><a href='/mails'>Retour</a>"
 
 if __name__ == '__main__':
     os.makedirs(MAIL_DIR, exist_ok=True)
